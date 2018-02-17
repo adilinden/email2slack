@@ -21,11 +21,25 @@
 # Just need some perl modules. Depending on environment can use Debian
 # packages or install via CPAN.
 #
-# apt-get install libemail-filter-perl
-# sudo cpan install Email::Filter
+#   apt-get install libemail-filter-perl
+#   apt-get install libwww-perl
 #
-# apt-get install libwww-perl
-# sudo cpan install Bundle::LWP
+# or
+#
+#   sudo cpan install Email::Filter
+#   sudo cpan install Bundle::LWP
+#
+# Install this script via git
+#
+#   cd /usr/local/lib
+#   git clone https://github.com/adilinden/email2slack.git
+#
+# Hook into local MTA by adding to /etc/aliases something like this
+#
+#   webbot-test: "|/usr/bin/perl /usr/local/lib/email2slack/email2slack.pl"
+#
+# Run the `newaliases` command to update the aliases database.
+#
 #
 # SLACK
 # -----
