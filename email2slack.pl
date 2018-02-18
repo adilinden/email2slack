@@ -79,8 +79,10 @@ exit if (-t STDIN);
 ##
 my $mail = Email::Filter->new();
 
-my $title = slack_escape($mail->header('subject'));
-my $text = slack_escape($mail->body());
+my $mail_from    = slack_escape($mail->header('from'));
+my $mail_to      = slack_escape($mail->header('to'));
+my $mail_subject = slack_escape($mail->header('subject'));
+my $mail_body    = slack_escape($mail->body());
 
 ##
 ## Handle SLACK webhook
@@ -94,12 +96,11 @@ $req->header('content-type' => 'application/json');
 # add POST data to HTTP request body
 my $post_data = <<EOD;
 {
+    "text": "*$mail_subject*",
     "attachments": [
         {
             "fallback": "",
-            "color": "#36a64f",
-            "title": "$title",
-            "text": "$text"
+            "text": "*From:* $mail_from\n*Subject:* $mail_subject\n\n$mail_body"
         }
      ]
 }
