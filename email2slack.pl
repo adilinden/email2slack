@@ -54,6 +54,32 @@
 # https://api.slack.com/incoming-webhooks
 # https://api.slack.com/docs/message-attachments
 #
+#
+# Zenoss
+# ------
+#
+# Configured Zenoss email notifications to be formatted as follows in
+# Events > Triggers > Notifications as follows:
+# 
+# Down Message
+# 
+# Subject Format: ${evt/device} is DOWN!
+# 
+# Body Format:    Device: ${evt/device}
+#                 Time: ${evt/lastTime}
+#                 Message: ${evt/message}
+#                 More at <url of choice> ...
+# 
+# Clear Message
+# 
+# Subject Format: ${evt/device} RECOVERED!
+# 
+# Body Format:    Device: ${evt/device}
+#                 Time: ${evt/lastTime}
+#                 Message: ${evt/message}
+#                 More at <url of choice> ...
+# 
+
 use strict;
 use warnings;
 use utf8;
@@ -84,6 +110,11 @@ my $mail_to      = slack_escape($mail->header('to'));
 my $mail_subject = slack_escape($mail->header('subject'));
 my $mail_body    = slack_escape($mail->body());
 
+# Colour the output
+my $colour = "#aaaaaa";
+$colour = "#dd1010" if ($mail_subject =~ m/down/i);
+$colour = "#10dd10" if ($mail_subject =~ m/recovered/i);
+
 ##
 ## Handle SLACK webhook
 ##
@@ -100,6 +131,7 @@ my $post_data = <<EOD;
     "attachments": [
         {
             "fallback": "",
+            "color": "$colour",
             "text": "*From:* $mail_from\n*Subject:* $mail_subject\n\n$mail_body"
         }
      ]
